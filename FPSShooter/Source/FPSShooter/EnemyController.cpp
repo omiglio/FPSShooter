@@ -21,13 +21,18 @@ AEnemyController::AEnemyController()
 void AEnemyController::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
+	this->SetLifeSpan(10);
 }
 
 // Called every frame
 void AEnemyController::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+	FVector NewLocation = GetActorLocation();
+	NewLocation.X += Direction.X * Speed * DeltaTime;
+	SetActorLocation(NewLocation);
 
 }
 
@@ -40,5 +45,10 @@ void AEnemyController::OnOverlap (UPrimitiveComponent*
 	if (OtherActor == GetWorld()->GetFirstPlayerController()->GetPawn())
 	{
 		UGameplayStatics::SetGamePaused(GetWorld(), true);
+	}
+	else if(OtherActor->GetName().Contains("Projectile"))
+	{
+		OtherActor->Destroy();
+		this-> Destroy();
 	}
 }

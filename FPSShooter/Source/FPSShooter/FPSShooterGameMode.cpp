@@ -42,6 +42,8 @@ void AFPSShooterGameMode::Tick(float DeltaTime)
 
 			AEnemyController* enemy = World->SpawnActor<AEnemyController>
 				(EnemyBlueprint, enemyLocation, FRotator::ZeroRotator);
+			enemy->Direction = (playerLocation - enemyLocation).
+				GetSafeNormal();
 		}
 	}
 }
