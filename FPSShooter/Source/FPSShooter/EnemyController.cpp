@@ -4,6 +4,7 @@
 #include "EnemyController.h"
 #include "Components/BoxComponent.h"
 #include "Kismet/GameplayStatics.h"
+#include "FPSShooterGameMode.h"
 
 // Sets default values
 AEnemyController::AEnemyController()
@@ -44,10 +45,16 @@ void AEnemyController::OnOverlap (UPrimitiveComponent*
 {
 	if (OtherActor == GetWorld()->GetFirstPlayerController()->GetPawn())
 	{
+		((AFPSShooterGameMode*)GetWorld()->GetAuthGameMode())->
+			OnGameOver();
+
 		UGameplayStatics::SetGamePaused(GetWorld(), true);
 	}
-	else if(OtherActor->GetName().Contains("Projectile"))
+	else if (OtherActor->GetName().Contains("Projectile"))
 	{
+		((AFPSShooterGameMode*)GetWorld()->GetAuthGameMode())->
+			IncrementScore();
+
 		OtherActor->Destroy();
 		this-> Destroy();
 	}

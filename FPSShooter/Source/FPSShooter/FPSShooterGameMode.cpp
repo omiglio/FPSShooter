@@ -50,7 +50,7 @@ void AFPSShooterGameMode::Tick(float DeltaTime)
 
 void AFPSShooterGameMode::IncrementScore()
 {
-
+	Score += 100;
 }
 
 void AFPSShooterGameMode::OnGameOver()
