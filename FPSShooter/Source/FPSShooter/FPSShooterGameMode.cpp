@@ -5,10 +5,14 @@
 #include "Math/UnrealMathUtility.h"
 #include "Kismet/GameplayStatics.h"
 #include "EnemyController.h"
+#include "GameWidget.h"
 
 void AFPSShooterGameMode::BeginPlay()
 {
 	Super::BeginPlay();
+	ChangeMenuWidget(StartingWidgetClass);
+
+	((UGameWidget*)CurrentWidget)->Load();
 }
 
 void AFPSShooterGameMode::Tick(float DeltaTime)
@@ -51,16 +55,38 @@ void AFPSShooterGameMode::Tick(float DeltaTime)
 void AFPSShooterGameMode::IncrementScore()
 {
 	Score += 100;
+	((UGameWidget*)CurrentWidget)->SetScore(Score);
 }
 
 void AFPSShooterGameMode::OnGameOver()
 {
-
+	Score += 100;
+	((UGameWidget*)CurrentWidget)->OnGameOver(Score);
 }
 
 void AFPSShooterGameMode::OnRestart()
 {
 
+}
+
+void AFPSShooterGameMode::ChangeMenuWidget(TSubclassOf<UUserWidget>
+	NewWidgetClass)
+{
+	if (CurrentWidget != nullptr)
+	{
+		CurrentWidget->RemoveFromViewport();
+		CurrentWidget = nullptr;
+	}
+
+	if (NewWidgetClass != nullptr)
+	{
+		CurrentWidget = CreateWidget<UUserWidget>(GetWorld(),
+			NewWidgetClass);
+		if (CurrentWidget != nullptr)
+		{
+			CurrentWidget->AddToViewport();
+		}
+	}
 }
 
 
