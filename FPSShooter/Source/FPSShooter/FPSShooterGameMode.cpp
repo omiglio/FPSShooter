@@ -13,6 +13,10 @@ void AFPSShooterGameMode::BeginPlay()
 	ChangeMenuWidget(StartingWidgetClass);
 
 	((UGameWidget*)CurrentWidget)->Load();
+
+	GetWorld()->GetFirstPlayerController()->InputComponent->
+		BindAction("Restart", IE_Pressed, this, &
+		AFPSShooterGameMode::OnRestart).bExecuteWhenPaused = true;
 }
 
 void AFPSShooterGameMode::Tick(float DeltaTime)
@@ -66,7 +70,8 @@ void AFPSShooterGameMode::OnGameOver()
 
 void AFPSShooterGameMode::OnRestart()
 {
-
+UGameplayStatics::OpenLevel(this, FName(*GetWorld()->GetName())
+	, false);
 }
 
 void AFPSShooterGameMode::ChangeMenuWidget(TSubclassOf<UUserWidget>
